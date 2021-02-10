@@ -1,63 +1,55 @@
-#include <boost/asio.hpp>
-#include <boost/system/error_code.hpp>
-
-#include <iomanip>
+#include <boost/beast/core.hpp>
+#include <boost/beast/websocket.hpp>
+#include <boost/asio/connect.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <cstdlib>
 #include <iostream>
-#include <thread>
+#include <string>
 
-using tcp = boost::asio::ip::tcp;
-
-void Log(boost::system::error_code ec)
-{
-    std::cerr << "[" << std::setw(14) << std::this_thread::get_id() << "] "
-              << (ec ? "Error: " : "OK")
-              << (ec ? ec.message() : "")
-              << std::endl;
-}
-
-void OnConnect(boost::system::error_code ec)
-{
-    Log(ec);
-}
+namespace beast = boost::beast;         // from <boost/beast.hpp>
+namespace http = beast::http;           // from <boost/beast/http.hpp>
+namespace websocket = beast::websocket; // from <boost/beast/websocket.hpp>
+namespace net = boost::asio;            // from <boost/asio.hpp>
+using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
 int main()
 {
-    std::cerr << "[" << std::setw(14) << std::this_thread::get_id() << "] main"
-              << std::endl;
+    std::string host = "echo.websocket.org";
+    auto const port = "80";
+    auto const text = "Hello, world";
 
-    // Always start with an I/O context object.
-    boost::asio::io_context ioc {};
+    // The io_context is required for all I/O
+    net::io_context ioc;
 
-    // Create an I/O object. Every Boost.Asio I/O object API needs an io_context
-    // as the first parameter.
-    tcp::socket socket {boost::asio::make_strand(ioc)};
+    // These objects perform our I/O
+    tcp::resolver resolver{ioc};
+    websocket::stream<tcp::socket> ws{ioc};
 
-    size_t nThreads {4};
+    // Look up the domain name
+    auto const results = resolver.resolve(host,port);
 
-    // Under the hood, socket.connect uses I/O context to talk to the socket
-    // and get a response back. The response is saved in ec.
-    boost::system::error_code ec {};
-    tcp::resolver resolver {ioc};
-    auto endpoint {resolver.resolve("google.com", "80", ec)};
-    if (ec) {
-        Log(ec);
-        return -1;
-    }
-    for (size_t idx {0}; idx < nThreads; ++idx) {
-        socket.async_connect(*endpoint, OnConnect);
-    }
+    // Connect the TCP socket
+    net::connect(ws.next_layer(), results);
 
-    // We must call io_context::run for asynchronous callbacks to run.
-    std::vector<std::thread> threads {};
-    threads.reserve(nThreads);
-    for (size_t idx {0}; idx < nThreads; ++idx) {
-        threads.emplace_back([&ioc]() {
-            ioc.run();
-        });
-    }
-    for (size_t idx {0}; idx < nThreads; ++idx) {
-        threads[idx].join();
-    }
+    // Perform the websocket handshake
+    ws.handshake(host, "/");
+
+    // Send the message
+    ws.write(net::buffer(std::string(text)));
+
+    // This buffer will hold the incoming message
+    beast::flat_buffer buffer;
+
+    // Read a message into our buffer
+    ws.read(buffer);
+
+    // Close the WebSocket connection
+    ws.close(websocket::close_code::normal);
+
+    // If we get here then the connection is closed gracefully
+
+    // The make_printable() function helps print a ConstBufferSequence
+    std::cout << beast::make_printable(buffer.data()) << std::endl;
 
     return 0;
 }
