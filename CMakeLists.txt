@@ -5,6 +5,10 @@ project(network-monitor)
 # Add the local CMake modules folder to the CMake search path.
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+# Load CMake/Conan.cmake, which sets up a 'run_conan()' macro to download dependencies.
+include(Conan REQUIRED)
+run_conan()
+
 # Dependencies
 # If dependencies are managed with conan, we prepend the current build folder
 # to the CMake module path, where CMake looks for dependencies.
@@ -12,6 +16,7 @@ if(EXISTS ${CMAKE_CURRENT_BINARY_DIR}/conaninfo.txt)
     list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 find_package(Boost 1.74 REQUIRED COMPONENTS system unit_test_framework)
+find_package(OpenSSL REQUIRED)
 
 # Called before any other target is defined.
 enable_testing()
@@ -40,6 +45,7 @@ target_include_directories(network-monitor
     PUBLIC
         inc
 )
+
 target_link_libraries(network-monitor
     PUBLIC
         Boost::Boost
@@ -53,16 +59,19 @@ set(TESTS_SOURCES
 add_executable(network-monitor-tests ${TESTS_SOURCES})
 target_compile_features(network-monitor-tests
     PRIVATE
-        cxx_std_14
+        cxx_std_17
 )
 target_compile_definitions(network-monitor-tests
     PRIVATE
         $<$<PLATFORM_ID:Windows>:_WIN32_WINNT=${WINDOWS_VERSION}>
+	TESTS_CACERT_PEM="${CMAKE_CURRENT_SOURCE_DIR}/tests/cacert.pem"
 )
+
 target_link_libraries(network-monitor-tests
     PRIVATE
         network-monitor
         Boost::Boost
+	OpenSSL::OpenSSL
 )
 add_test(
     NAME network-monitor-tests
