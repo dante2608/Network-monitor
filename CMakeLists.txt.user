@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.13.1, 2021-02-14T21:39:29. -->
+<!-- Written by QtCreator 4.13.1, 2021-02-16T23:54:10. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -65,9 +65,10 @@
     <value type="bool" key="AutoTest.Framework.QtTest">true</value>
    </valuemap>
    <valuemap type="QVariantMap" key="AutoTest.CheckStates">
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/file-downloader.cpp:file_downloader">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/file-downloader.cpp:network_monitor">Checked</value>
     <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:cacert_pem">Checked</value>
     <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:class_WebSocketClient">Checked</value>
-    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:network_monitor">Checked</value>
    </valuemap>
    <value type="int" key="AutoTest.RunAfterBuild">0</value>
    <value type="bool" key="AutoTest.UseGlobal">true</value>

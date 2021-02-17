@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE(class_WebSocketClient)
     const std::string url {"ltnm.learncppthroughprojects.com"};
     const std::string endpoint {"/network-events"};
     const std::string port {"443"};
-
+    BOOST_TEST_MESSAGE("message");
     // STOMP frame
     const std::string username {"fake_username"};
     const std::string password {"fake_password"};
