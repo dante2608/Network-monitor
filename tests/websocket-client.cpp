@@ -1,237 +1,219 @@
+#include "boost-mock.h"
+
 #include <network-monitor/websocket-client.h>
 
 #include <boost/asio.hpp>
-#include <boost/beast.hpp>
-#include <boost/beast/ssl.hpp>
-#include <boost/system/error_code.hpp>
-
-#include <openssl/ssl.h>
+#include <boost/asio/ssl.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include <chrono>
-#include <functional>
-#include <iomanip>
-#include <iostream>
+#include <filesystem>
+#include <mutex>
 #include <string>
 
-using NetworkMonitor::WebSocketClient;
+using NetworkMonitor::BoostWebSocketClient;
 
-using tcp = boost::asio::ip::tcp;
-namespace websocket = boost::beast::websocket;
+using NetworkMonitor::MockResolver;
+using NetworkMonitor::MockWebSocketClient;
 
-// Static functions
-
-static void Log(const std::string& where, boost::system::error_code ec)
-{
-    std::cerr << "[" << std::setw(20) << where << "] "
-              << (ec ? "Error: " : "OK")
-              << (ec ? ec.message() : "")
-              << std::endl;
-}
-
-// Public methods
-
-WebSocketClient::WebSocketClient(
-    const std::string& url,
-    const std::string& endpoint,
-    const std::string& port,
-    boost::asio::io_context& ioc,
-    boost::asio::ssl::context& ctx
-) : url_ {url},
-    endpoint_ {endpoint},
-    port_ {port},
-    resolver_ {boost::asio::make_strand(ioc)},
-    ws_ {boost::asio::make_strand(ioc), ctx}
-{
-}
-
-WebSocketClient::~WebSocketClient() = default;
-
-void WebSocketClient::Connect(
-    std::function<void (boost::system::error_code)> onConnect,
-    std::function<void (boost::system::error_code,
-                        std::string&&)> onMessage,
-    std::function<void (boost::system::error_code)> onDisconnect
-)
-{
-    // Save the user callbacks for later use.
-    onConnect_ = onConnect;
-    onMessage_ = onMessage;
-    onDisconnect_ = onDisconnect;
-
-    // Start the chain of asynchronous callbacks.
-    resolver_.async_resolve(url_, port_,
-        [this](auto ec, auto endpoint) {
-            OnResolve(ec, endpoint);
-        }
-    );
-}
-
-void WebSocketClient::Send(
-    const std::string& message,
-    std::function<void (boost::system::error_code)> onSend
-)
-{
-    ws_.async_write(boost::asio::buffer(message),
-        [this, onSend](auto ec, auto) {
-            if (onSend) {
-                onSend(ec);
-            }
-    });
-}
-
-void WebSocketClient::Close(
-    std::function<void (boost::system::error_code)> onClose
-)
-{
-    ws_.async_close(websocket::close_code::none, [this, onClose](auto ec) {
-        if (onClose) {
-            onClose(ec);
-        }
-    });
-}
-
-// Private methods
-
-void WebSocketClient::OnResolve(
-    const boost::system::error_code& ec,
-    tcp::resolver::iterator endpoint
-)
-{
-    if (ec) {
-        Log("OnResolve", ec);
-        if (onConnect_) {
-            onConnect_(ec);
-        }
-        return;
+// This fixture is used to re-initialize all mock properties before a test.
+struct WebSocketClientTestFixture {
+    WebSocketClientTestFixture()
+    {
+        MockResolver::resolve_ec = {};
     }
+};
 
-    // The following timeout only matters for the purpose of connecting to the
-    // TCP socket. We will reset the timeout to a sensible default after we are
-    // connected.
-    // Note: The TCP layer is the lowest layer (WebSocket -> TLS -> TCP).
-    boost::beast::get_lowest_layer(ws_).expires_after(std::chrono::seconds(5));
+// Use this to set a timeout on tests that may hang or suffer from a slow
+// connection.
+static boost::unit_test::timeout gTimeout {3};
 
-    // Connect to the TCP socket.
-    // Note: The TCP layer is the lowest layer (WebSocket -> TLS -> TCP).
-    boost::beast::get_lowest_layer(ws_).async_connect(*endpoint,
-        [this](auto ec) {
-            OnConnect(ec);
-        }
-    );
-}
+BOOST_AUTO_TEST_SUITE(network_monitor);
 
-void WebSocketClient::OnConnect(
-    const boost::system::error_code& ec
-)
+BOOST_AUTO_TEST_SUITE(class_WebSocketClient);
+
+BOOST_AUTO_TEST_CASE(cacert_pem)
 {
-    if (ec) {
-        Log("OnConnect", ec);
-        if (onConnect_) {
-            onConnect_(ec);
-        }
-        return;
-    }
-
-    // Now that the TCP socket is connected, we can reset the timeout to
-    // whatever Boost.Beast recommends.
-    // Note: The TCP layer is the lowest layer (WebSocket -> TLS -> TCP).
-    boost::beast::get_lowest_layer(ws_).expires_never();
-    ws_.set_option(websocket::stream_base::timeout::suggested(
-        boost::beast::role_type::client
-    ));
-
-    // Attempt a TLS handshake.
-    // Note: The TLS layer is the next layer (WebSocket -> TLS -> TCP).
-    ws_.next_layer().async_handshake(boost::asio::ssl::stream_base::client,
-        [this](auto ec) {
-            OnTlsHandshake(ec);
-        }
-    );
+    BOOST_CHECK(std::filesystem::exists(TESTS_CACERT_PEM));
 }
 
-void WebSocketClient::OnTlsHandshake(
-    const boost::system::error_code& ec
-)
+BOOST_FIXTURE_TEST_SUITE(Connect, WebSocketClientTestFixture);
+
+BOOST_AUTO_TEST_CASE(fail_resolve, *gTimeout)
 {
-    if (ec) {
-        Log("OnTlsHandshake", ec);
-        if (onConnect_) {
-            onConnect_(ec);
-        }
-        return;
-    }
+    // We use the mock client so we don't really connect to the target.
+    const std::string url {"echo.websocket.org"};
+    const std::string endpoint {"/"};
+    const std::string port {"443"};
 
-    // Attempt a WebSocket handshake.
-    ws_.async_handshake(url_, endpoint_,
-        [this](auto ec) {
-            OnHandshake(ec);
-        }
-    );
+    boost::asio::ssl::context ctx {boost::asio::ssl::context::tlsv12_client};
+    ctx.load_verify_file(TESTS_CACERT_PEM);
+    boost::asio::io_context ioc {};
+
+    // Set the expected error codes.
+    MockResolver::resolve_ec = boost::asio::error::host_not_found;
+
+    MockWebSocketClient client {url, endpoint, port, ioc, ctx};
+    bool calledOnConnect {false};
+    auto onConnect {[&calledOnConnect](auto ec) {
+        calledOnConnect = true;
+        BOOST_CHECK_EQUAL(ec, boost::asio::error::host_not_found);
+    }};
+    client.Connect(onConnect);
+    ioc.run();
+
+    // When we get here, the io_context::run function has run out of work to do.
+    BOOST_CHECK(calledOnConnect);
 }
 
-void WebSocketClient::OnHandshake(
-    const boost::system::error_code& ec
-)
+BOOST_AUTO_TEST_SUITE_END(); // Connect
+
+BOOST_AUTO_TEST_SUITE(live);
+
+BOOST_AUTO_TEST_CASE(echo_websocket_org, *gTimeout)
 {
-    if (ec) {
-        Log("OnHandshake", ec);
-        if (onConnect_) {
-            onConnect_(ec);
+    // Connection targets
+    const std::string url {"echo.websocket.org"};
+    const std::string endpoint {"/"};
+    const std::string port {"443"};
+    const std::string message {"Hello WebSocket"};
+
+    // TLS context
+    boost::asio::ssl::context ctx {boost::asio::ssl::context::tlsv12_client};
+    ctx.load_verify_file(TESTS_CACERT_PEM);
+
+    // Always start with an I/O context object.
+    boost::asio::io_context ioc {};
+
+    // The class under test
+    BoostWebSocketClient client {url, endpoint, port, ioc, ctx};
+
+    // We use these flags to check that the connection, send, receive functions
+    // work as expected.
+    bool connected {false};
+    bool messageSent {false};
+    bool messageReceived {false};
+    bool disconnected {false};
+    std::string echo {};
+
+    // Our own callbacks
+    auto onSend {[&messageSent](auto ec) {
+        messageSent = !ec;
+    }};
+    auto onConnect {[&client, &connected, &onSend, &message](auto ec) {
+        connected = !ec;
+        if (!ec) {
+            client.Send(message, onSend);
         }
-        return;
-    }
+    }};
+    auto onClose {[&disconnected](auto ec) {
+        disconnected = !ec;
+    }};
+    auto onReceive {[&client,
+                      &onClose,
+                      &messageReceived,
+                      &echo](auto ec, auto received) {
+        messageReceived = !ec;
+        echo = std::move(received);
+        client.Close(onClose);
+    }};
 
-    // Tell the WebSocket object to exchange messages in text format.
-    ws_.text(true);
+    // We must call io_context::run for asynchronous callbacks to run.
+    client.Connect(onConnect, onReceive);
+    ioc.run();
 
-    // Now that we are connected, set up a recursive asynchronous listener to
-    // receive messages.
-    ListenToIncomingMessage(ec);
-
-    // Dispatch the user callback.
-    // Note: This call is synchronous and will block the WebSocket strand.
-    if (onConnect_) {
-        onConnect_(ec);
-    }
+    // When we get here, the io_context::run function has run out of work to do.
+    BOOST_CHECK(connected);
+    BOOST_CHECK(messageSent);
+    BOOST_CHECK(messageReceived);
+    BOOST_CHECK(disconnected);
+    BOOST_CHECK_EQUAL(message, echo);
 }
 
-void WebSocketClient::ListenToIncomingMessage(
-    const boost::system::error_code& ec
-)
+bool CheckResponse(const std::string& response)
 {
-    // Stop processing messages if the connection has been aborted.
-    if (ec == boost::asio::error::operation_aborted) {
-        if (onDisconnect_) {
-            onDisconnect_(ec);
-        }
-        return;
-    }
-
-    // Read a message asynchronously. On a successful read, process the message
-    // and recursively call this function again to process the next message.
-    ws_.async_read(rBuffer_,
-        [this](auto ec, auto nBytes) {
-            OnRead(ec, nBytes);
-            ListenToIncomingMessage(ec);
-        }
-    );
+    // We do not parse the whole message. We only check that it contains some
+    // expected items.
+    bool ok {true};
+    ok &= response.find("ERROR") != std::string::npos;
+    ok &= response.find("ValidationInvalidAuth") != std::string::npos;
+    return ok;
 }
 
-void WebSocketClient::OnRead(
-    const boost::system::error_code& ec,
-    size_t nBytes
-)
+BOOST_AUTO_TEST_CASE(network_events, *gTimeout)
 {
-    // We just ignore messages that failed to read.
-    if (ec) {
-        return;
-    }
+    // Connection targets
+    const std::string url {"ltnm.learncppthroughprojects.com"};
+    const std::string endpoint {"/network-events"};
+    const std::string port {"443"};
 
-    // Parse the message and forward it to the user callback.
-    // Note: This call is synchronous and will block the WebSocket strand.
-    std::string message {boost::beast::buffers_to_string(rBuffer_.data())};
-    rBuffer_.consume(nBytes);
-    if (onMessage_) {
-        onMessage_(ec, std::move(message));
-    }
+    // STOMP frame
+    const std::string username {"fake_username"};
+    const std::string password {"fake_password"};
+    std::stringstream ss {};
+    ss << "STOMP" << std::endl
+       << "accept-version:1.2" << std::endl
+       << "host:transportforlondon.com" << std::endl
+       << "login:" << username << std::endl
+       << "passcode:" << password << std::endl
+       << std::endl // Headers need to be followed by a blank line.
+       << '\0'; // The body (even if absent) must be followed by a NULL octet.
+    const std::string message {ss.str()};
+
+    // TLS context
+    boost::asio::ssl::context ctx {boost::asio::ssl::context::tlsv12_client};
+    ctx.load_verify_file(TESTS_CACERT_PEM);
+
+    // Always start with an I/O context object.
+    boost::asio::io_context ioc {};
+
+    // The class under test
+    BoostWebSocketClient client {url, endpoint, port, ioc, ctx};
+
+    // We use these flags to check that the connection, send, receive functions
+    // work as expected.
+    bool connected {false};
+    bool messageSent {false};
+    bool messageReceived {false};
+    bool disconnected {false};
+    std::string response {};
+
+    // Our own callbacks
+    auto onSend {[&messageSent](auto ec) {
+        messageSent = !ec;
+    }};
+    auto onConnect {[&client, &connected, &onSend, &message](auto ec) {
+        connected = !ec;
+        if (!ec) {
+            client.Send(message, onSend);
+        }
+    }};
+    auto onClose {[&disconnected](auto ec) {
+        disconnected = !ec;
+    }};
+    auto onReceive {[&client,
+                     &onClose,
+                     &messageReceived,
+                     &response](auto ec, auto received) {
+        messageReceived = !ec;
+        response = std::move(received);
+        client.Close(onClose);
+    }};
+
+    // We must call io_context::run for asynchronous callbacks to run.
+    client.Connect(onConnect, onReceive);
+    ioc.run();
+
+    // When we get here, the io_context::run function has run out of work to do.
+    BOOST_CHECK(connected);
+    BOOST_CHECK(messageSent);
+    BOOST_CHECK(messageReceived);
+    BOOST_CHECK(disconnected);
+    BOOST_CHECK(CheckResponse(response));
 }
+
+BOOST_AUTO_TEST_SUITE_END(); // live
+
+BOOST_AUTO_TEST_SUITE_END(); // class_WebSocketClient
+
+BOOST_AUTO_TEST_SUITE_END(); // network_monitor

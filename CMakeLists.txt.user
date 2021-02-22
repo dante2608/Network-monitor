@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.13.1, 2021-02-17T14:31:56. -->
+<!-- Written by QtCreator 4.13.1, 2021-02-21T22:47:57. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -67,8 +67,29 @@
    <valuemap type="QVariantMap" key="AutoTest.CheckStates">
     <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/file-downloader.cpp:file_downloader">Checked</value>
     <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/file-downloader.cpp:network_monitor">Checked</value>
-    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:cacert_pem">Checked</value>
-    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:class_WebSocketClient">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/file-downloader.cpp:parse_file">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:AddLine">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:AddStation">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:FromJson">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:GetRoutesServingStation">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:PassengerEvents">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:TravelTime">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:basic">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:class_TransportNetwork">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:duplicate">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:duplicate_id">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:duplicate_name">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:fail_on_bad_json">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:fail_on_bad_travel_times">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:fail_on_good_json_bad_items">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:from_json_1line_1route">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:from_json_1line_2routes">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:from_json_2lines_2routes">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:from_json_travel_times">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:lone_station">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:missing_stations">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:over_route">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:shared_stations">Checked</value>
    </valuemap>
    <value type="int" key="AutoTest.RunAfterBuild">0</value>
    <value type="bool" key="AutoTest.UseGlobal">true</value>
