@@ -19,6 +19,7 @@ find_package(Boost 1.74 REQUIRED COMPONENTS system unit_test_framework)
 find_package(OpenSSL REQUIRED)
 find_package(CURL REQUIRED)
 find_package(nlohmann_json REQUIRED)
+find_package(spdlog REQUIRED)
 
 # Called before any other target is defined.
 enable_testing()
@@ -33,6 +34,7 @@ endif()
 # Static library
 set(LIB_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/file-downloader.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/stomp-client.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/stomp-frame.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/transport-network.cpp"
 )
@@ -53,17 +55,21 @@ target_include_directories(network-monitor
 target_link_libraries(network-monitor
     PUBLIC
         Boost::Boost
-        CURL::CURL
         nlohmann_json::nlohmann_json
+        OpenSSL::OpenSSL
+        spdlog::spdlog
+        CURL::CURL
 )
 
 # Tests
 set(TESTS_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/tests/file-downloader.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/main.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/stomp-client.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/stomp-frame.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/tests/transport-network.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/tests/websocket-client.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/tests/stomp-frame.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/tests/main.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/websocket-client-mock.cpp"
 )
 add_executable(network-monitor-tests ${TESTS_SOURCES})
 target_compile_features(network-monitor-tests
@@ -74,16 +80,13 @@ target_compile_definitions(network-monitor-tests
     PRIVATE
         $<$<PLATFORM_ID:Windows>:_WIN32_WINNT=${WINDOWS_VERSION}>
         TEST_DATA="${CMAKE_CURRENT_SOURCE_DIR}/tests/test-data"
-	TESTS_CACERT_PEM="${CMAKE_CURRENT_SOURCE_DIR}/tests/cacert.pem"
+        TESTS_CACERT_PEM="${CMAKE_CURRENT_SOURCE_DIR}/tests/cacert.pem"
         TESTS_NETWORK_LAYOUT_JSON="${CMAKE_CURRENT_SOURCE_DIR}/tests/network-layout.json"
 )
 
 target_link_libraries(network-monitor-tests
     PRIVATE
         network-monitor
-        Boost::Boost
-	OpenSSL::OpenSSL
-	CURL::CURL
 )
 add_test(
     NAME network-monitor-tests

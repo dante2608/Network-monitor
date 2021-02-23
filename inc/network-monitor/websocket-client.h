@@ -9,6 +9,9 @@
 
 #include <openssl/ssl.h>
 
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
+
 #include <chrono>
 #include <functional>
 #include <iomanip>
@@ -59,7 +62,7 @@ public:
 
     /*! \brief Destructor
      */
-    ~WebSocketClient() = default;;
+    ~WebSocketClient() = default;
 
     /*! \brief Connect to the server.
      *
@@ -146,24 +149,13 @@ private:
                         std::string&&)> onMessage_ {nullptr};
     std::function<void (boost::system::error_code)> onDisconnect_ {nullptr};
 
-    static void Log(
-        const std::string& where,
-        boost::system::error_code ec
-    )
-    {
-        std::cerr << "[" << std::setw(20) << where << "] "
-                  << (ec ? "Error: " : "OK")
-                  << (ec ? ec.message() : "")
-                  << std::endl;
-    }
-
     void OnResolve(
         const boost::system::error_code& ec,
         boost::asio::ip::tcp::resolver::iterator endpoint
     )
     {
         if (ec) {
-            Log("OnResolve", ec);
+            spdlog::error("OnResolve: {}", ec.message());
             if (onConnect_) {
                 onConnect_(ec);
             }
@@ -190,7 +182,7 @@ private:
     )
     {
         if (ec) {
-            Log("OnConnect", ec);
+            spdlog::error("OnConnect: {}", ec.message());
             if (onConnect_) {
                 onConnect_(ec);
             }
@@ -221,7 +213,7 @@ private:
     )
     {
         if (ec) {
-            Log("OnTlsHandshake", ec);
+            spdlog::error("OnTlsHandshake: {}", ec.message());
             if (onConnect_) {
                 onConnect_(ec);
             }
@@ -241,7 +233,7 @@ private:
     )
     {
         if (ec) {
-            Log("OnHandshake", ec);
+            spdlog::error("OnHandshake: {}", ec.message());
             if (onConnect_) {
                 onConnect_(ec);
             }

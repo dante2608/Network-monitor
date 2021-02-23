@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.13.1, 2021-02-21T22:47:57. -->
+<!-- Written by QtCreator 4.13.1, 2021-02-23T00:54:00. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -68,6 +68,63 @@
     <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/file-downloader.cpp:file_downloader">Checked</value>
     <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/file-downloader.cpp:network_monitor">Checked</value>
     <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/file-downloader.cpp:parse_file">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:class_StompClient">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:close">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:close_before_connect">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:close_nullptr">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:connect">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:connect_nullptr">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:enum_class_StompClientError">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:fail_to_connect_auth">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:fail_to_connect_ws">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:live">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:ostream">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:stomp_client">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:subscribe">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:subscribe_after_close">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:subscribe_before_connect">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:subscribe_get_message">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:subscribe_onMessage_nullptr">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:subscribe_onSubscribe_nullptr">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-client.cpp:subscribe_to_invalid_endpoint">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:class_StompFrame">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:constructor_from_components_empty_body">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:constructor_from_components_empty_headers">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:constructor_from_components_full">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:constructor_from_components_only_command">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:constructors">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:enum_class_StompCommand">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:enum_class_StompError">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:enum_class_StompHeader">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:ostream">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_bad_command">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_bad_header">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_content_length_exceeding">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_content_length_wrong_number">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_double_colon_in_header_line">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_empty_body">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_empty_body_content_length">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_empty_header_value">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_empty_headers">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_junk_after_body">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_junk_after_body_content_length">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_just_command">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_missing_body_newline">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_missing_last_header_newline">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_newline_after_command">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_newlines_after_body">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_newlines_after_body_content_length">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_only_command">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_repeated_headers">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_repeated_headers_error_in_second">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_required_headers">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_unrecognized_header">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_unterminated_body">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_unterminated_body_content_length">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_well_formed">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:parse_well_formed_content_length">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:stomp_frame">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/stomp-frame.cpp:to_string">Checked</value>
     <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:AddLine">Checked</value>
     <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:AddStation">Checked</value>
     <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:FromJson">Checked</value>
@@ -90,6 +147,28 @@
     <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:missing_stations">Checked</value>
     <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:over_route">Checked</value>
     <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/transport-network.cpp:shared_stations">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:Close">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:Connect">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:Send">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:cacert_pem">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:class_WebSocketClient">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:close">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:close_before_connect">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:echo_websocket_org">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:fail">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:fail_resolve">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:fail_socket_connect">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:fail_tls_handshake">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:fail_websocket_handshake">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:live">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:network_events">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:no_handler">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:onMessage">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:one_message">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:send_before_connect">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:successful_no_connecthandler">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:successful_nothing_to_read">Checked</value>
+    <value type="Qt::CheckState" key="/home/dat/network-monitor/tests/websocket-client.cpp:two_messages">Checked</value>
    </valuemap>
    <value type="int" key="AutoTest.RunAfterBuild">0</value>
    <value type="bool" key="AutoTest.UseGlobal">true</value>
@@ -159,7 +238,10 @@
     <value type="int" key="ProjectExplorer.BuildConfiguration.BuildStepListCount">2</value>
     <value type="bool" key="ProjectExplorer.BuildConfiguration.ClearSystemEnvironment">false</value>
     <valuelist type="QVariantList" key="ProjectExplorer.BuildConfiguration.CustomParsers"/>
-    <valuelist type="QVariantList" key="ProjectExplorer.BuildConfiguration.UserEnvironmentChanges"/>
+    <valuelist type="QVariantList" key="ProjectExplorer.BuildConfiguration.UserEnvironmentChanges">
+     <value type="QString">LTNM_USERNAME=63tran@cua.edu</value>
+     <value type="QString">LTNM_PASSWORD=bd9b68bdc77f46a307f03520fb360b6a2d2af9bd</value>
+    </valuelist>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Release</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeBuildConfiguration</value>
    </valuemap>
@@ -328,7 +410,7 @@
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/dat/network-monitor/build/bin</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/dat/network-monitor/build</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">2</value>
   </valuemap>

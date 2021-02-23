@@ -14,10 +14,8 @@ conan_add_remote(NAME bincrafters URL
                  https://api.bintray.com/conan/bincrafters/public-conan)
 
 conan_cmake_run(
-  CONANFILE conanfile.py
-  BASIC_SETUP
-  CMAKE_TARGETS # individual targets to link to
-  BUILD
-    missing
+   CONANFILE conanfile.py
+   PROFILE "${CMAKE_CURRENT_SOURCE_DIR}/conanprofile.toml"
+   BUILD missing
 )
 endmacro()
