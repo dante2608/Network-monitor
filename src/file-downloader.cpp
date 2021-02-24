@@ -1,7 +1,9 @@
 #include <network-monitor/file-downloader.h>
 
-#include <curl/curl.h>
 #include <nlohmann/json.hpp>
+
+#include <curl/curl.h>
+
 #include <filesystem>
 #include <fstream>
 #include <stdio.h>

@@ -2,7 +2,7 @@
     "lines": [
         {
             "line_id": "line_0",
-            "name": "Line 0 Name",
+            "name": "This line goes through a station that is not defined",
             "routes": [
                 {
                     "line_id": "line_0",
@@ -26,10 +26,6 @@
         {
             "station_id": "station_0",
             "name": "Station 0 Name"
-        },
-        {
-            "station_id": "station_1",
-            "name": "Station 1 Name"
         }
     ],
     "travel_times": [

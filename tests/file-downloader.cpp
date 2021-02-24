@@ -2,11 +2,10 @@
 
 #include <boost/asio.hpp>
 #include <boost/test/unit_test.hpp>
-#include <nlohmann/json.hpp>
+
 #include <filesystem>
 #include <fstream>
 #include <string>
-#include <iostream>
 
 using NetworkMonitor::DownloadFile;
 using NetworkMonitor::ParseJsonFile;
@@ -19,7 +18,7 @@ BOOST_AUTO_TEST_CASE(file_downloader)
         "https://ltnm.learncppthroughprojects.com/network-layout.json"
     };
     const auto destination {
-        TESTS_NETWORK_LAYOUT_JSON
+        std::filesystem::temp_directory_path() / "network-layout.json"
     };
 
     // Download the file.
@@ -45,7 +44,7 @@ BOOST_AUTO_TEST_CASE(file_downloader)
     }
 
     // Clean up.
-    //std::filesystem::remove(destination);
+    std::filesystem::remove(destination);
 }
 
 BOOST_AUTO_TEST_CASE(parse_file)

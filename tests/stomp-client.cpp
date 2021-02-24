@@ -1,5 +1,6 @@
 #include "websocket-client-mock.h"
 
+#include <network-monitor/env.h>
 #include <network-monitor/stomp-client.h>
 #include <network-monitor/websocket-client.h>
 
@@ -7,10 +8,10 @@
 #include <boost/asio/ssl.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include <cstdlib>
 #include <string>
 
 using NetworkMonitor::BoostWebSocketClient;
+using NetworkMonitor::GetEnvVar;
 using NetworkMonitor::MockWebSocketClientForStomp;
 using NetworkMonitor::StompClient;
 using NetworkMonitor::StompClientError;
@@ -558,18 +559,6 @@ BOOST_AUTO_TEST_CASE(subscribe_to_invalid_endpoint, *gTimeout)
     client.Connect(username, password, onConnect, onDisconnect);
     ioc.run();
     BOOST_CHECK(calledOnDisconnect);
-}
-
-static std::string GetEnvVar(
-    const std::string& envVar,
-    const std::string& defaultValue = ""
-)
-{
-    const char* value {std::getenv(envVar.c_str())};
-    if (defaultValue == "") {
-        BOOST_REQUIRE(value != nullptr);
-    }
-    return value != nullptr ? value : defaultValue;
 }
 
 BOOST_AUTO_TEST_CASE(live, *gTimeout)

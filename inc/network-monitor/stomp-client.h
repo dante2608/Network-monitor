@@ -260,7 +260,6 @@ private:
     // handler for the right subscription when a message arrives.
     std::unordered_map<std::string, Subscription> subscriptions_ {};
 
-
     void OnWsConnect(
         boost::system::error_code ec
     )
